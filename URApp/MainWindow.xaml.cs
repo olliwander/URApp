@@ -88,7 +88,7 @@ namespace URApp
             }
         }
 
-        // Method to send a command through an established connection
+        // Send kommando når der er forbindelse
         private bool SendCommand(string command)
         {
             if (stream != null && client.Connected)
