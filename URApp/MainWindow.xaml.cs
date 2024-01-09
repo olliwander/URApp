@@ -17,23 +17,21 @@ namespace URApp
             InitializeComponent();
             IpTextBox.Text = "172.20.254.201";
             PortTextBox.Text = "30002";
-            client = new TcpClient();  // Initialize the TcpClient
+            client = new TcpClient(); 
         }
 
         // Event handler for the Connect button click
         private void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
-            string ipAddress = IpTextBox.Text;  // Get the IP address from the TextBox
+            string ipAddress = IpTextBox.Text; 
             int port;
 
-            // Validate the IP address
             if (!IPAddress.TryParse(ipAddress, out IPAddress ip))
             {
                 MessageBox.Show("Please enter a valid IP address.");
                 return;
             }
 
-            // Validate and parse the port number
             if (!int.TryParse(PortTextBox.Text, out port) || port < 1 || port > 65535)
             {
                 MessageBox.Show("Please enter a valid port number.");
