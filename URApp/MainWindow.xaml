@@ -1,0 +1,23 @@
+﻿<Window x:Class="URApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="450" Width="800">
+    <StackPanel>
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Top">
+            <Label Content="IP Adresse:"/>
+            <TextBox x:Name="IpTextBox" Width="120" Height="20"/>
+
+            <Label Content="Port:"/>
+            <TextBox x:Name="PortTextBox" Width="80" Height="20"/>
+            <Button Content="Connect" Click="ConnectButton_Click" IsDefault="True"/>
+            <Ellipse x:Name="StatusLight" Fill="Red" Width="20" Height="20">
+            </Ellipse>
+        </StackPanel>
+        <!-- Additional UI for command input -->
+        <Label Content="Command:" HorizontalAlignment="Center"/>
+        <TextBox x:Name="CommandTextBox" Width="200" Height="23" Margin="0,5"/>
+        <Button Content="Send Command" Click="SendCommandButton_Click" Margin="0,5"/>
+        <Button Content="Disconnect" Click="DisconnectButton_Click" Margin="5"/>
+        <!-- Additional UI elements go here -->
+    </StackPanel>
+</Window>

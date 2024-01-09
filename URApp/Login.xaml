@@ -1,0 +1,15 @@
+﻿<Window x:Class="URApp.Login"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Login" Height="401" Width="349">
+    <Grid>
+        <StackPanel>
+            <Label>Username:</Label>
+            <TextBox x:Name="UsernameTextBox"/>
+            <Label>Password:</Label>
+            <PasswordBox x:Name="PasswordBox"/>
+            <Button Content="Login" Click="LoginButton_Click" IsDefault="True"/>
+        </StackPanel>
+    </Grid>
+</Window>
+
