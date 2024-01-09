@@ -88,7 +88,7 @@ namespace URApp
             }
         }
 
-        // Send kommando når der er forbindelse
+        // Send kommando når der er forbindelse men virker det når jeg opdaterer herigennem? 
         private bool SendCommand(string command)
         {
             if (stream != null && client.Connected)
