@@ -9,6 +9,8 @@
             <Label>Password:</Label>
             <PasswordBox x:Name="PasswordBox"/>
             <Button Content="Login" Click="LoginButton_Click" IsDefault="True"/>
+            <Button Name="RegisterButton" Content="Register" Margin="0,5,0,0" Click="RegisterButton_Click"/>
+
         </StackPanel>
     </Grid>
 </Window>

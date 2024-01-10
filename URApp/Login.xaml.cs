@@ -1,13 +1,39 @@
-﻿using System;
+﻿using System.Data.SqlClient;
+using System.Configuration;
 using System.Windows;
+using System;
 
 namespace URApp
 {
-    public partial class Login : Window 
+    public partial class Login : Window
     {
         public Login()
         {
             InitializeComponent();
+        }
+
+        public bool ValidateLogin(string username, string password)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                con.Open();
+                string query = "SELECT COUNT(1) FROM users WHERE username=@username AND password=@password";
+                SqlCommand cmd = new SqlCommand(query, con);
+                cmd.Parameters.AddWithValue("@username", username);
+                cmd.Parameters.AddWithValue("@password", password); 
+
+                int count = Convert.ToInt32(cmd.ExecuteScalar());
+                if (count == 1)
+                {
+                    return true; 
+                }
+                else
+                {
+                    return false; 
+                }
+            }
         }
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
@@ -15,25 +41,25 @@ namespace URApp
             string username = UsernameTextBox.Text;
             string password = PasswordBox.Password;
 
-            if (IsValidCredentials(username, password))
+            if (ValidateLogin(username, password))
             {
+                MessageBox.Show("Login successful!");
+                
                 MainWindow mainWindow = new MainWindow();
                 mainWindow.Show();
+
                 this.Close();
             }
             else
             {
-                MessageBox.Show("Invalid username or password");
+                MessageBox.Show("Login failed. Please check your username and password.");
             }
         }
 
-        private bool IsValidCredentials(string username, string password)
+        private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            // Skal ændres til at hive fra database
-            string dummyusername = "admin";
-            string dummypassword = "admin";
-
-            return username == dummyusername && password == dummypassword;
+            Register registerWindow = new Register();
+            registerWindow.Show();
         }
     }
 }
