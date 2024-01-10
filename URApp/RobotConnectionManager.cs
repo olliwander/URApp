@@ -6,57 +6,94 @@ using System;
 
 public class RobotConnectionManager
 {
-    private TcpClient client;
-    private NetworkStream stream;
+    private TcpClient commandClient; // Send kommandoer
+    private NetworkStream commandStream; 
 
-    public bool IsConnected => client?.Connected ?? false;
+    private TcpClient dataClient; // Modtag data
+    private NetworkStream dataStream; 
 
-    public async Task ConnectAsync(string ipAddress, int port)
+    // Tjekker kommando er forbundet
+    public bool IsCommandConnected => commandClient?.Connected ?? false;
+
+    // Tjekker Data er forbundet
+    public bool IsDataConnected => dataClient?.Connected ?? false;
+
+    // Port til modtag data
+    private const int dataPort = 30004;
+
+    public async Task ConnectAsync(string ipAddress, int commandPort)
     {
         if (!IPAddress.TryParse(ipAddress, out _))
         {
             throw new ArgumentException("Invalid IP address.");
         }
 
-        if (port < 1 || port > 65535)
+        if (commandPort < 1 || commandPort > 65535)
         {
             throw new ArgumentException("Invalid port number.");
         }
 
-        if (client != null && IsConnected)
-        {
-            await DisconnectAsync(); // Ensure we are disconnected before trying to connect again
-        }
+        // Connect the client for sending commands
+        commandClient = new TcpClient();
+        await commandClient.ConnectAsync(ipAddress, commandPort);
+        commandStream = commandClient.GetStream();
 
-        client = new TcpClient();
-        await client.ConnectAsync(ipAddress, port);
-        stream = client.GetStream();
+        // Connect the client for receiving data
+        dataClient = new TcpClient();
+        await dataClient.ConnectAsync(ipAddress, dataPort);
+        dataStream = dataClient.GetStream();
     }
 
     public async Task DisconnectAsync()
     {
-        if (stream != null)
+        // Disconnect the command client
+        if (commandStream != null)
         {
-            await stream.FlushAsync();
-            stream.Close();
-            stream = null;
+            await commandStream.FlushAsync();
+            commandStream.Close();
+            commandStream = null;
         }
-        if (client != null)
+        if (commandClient != null)
         {
-            client.Close();
-            client = null;
+            commandClient.Close();
+            commandClient = null;
+        }
+
+        // Disconnect the data client
+        if (dataStream != null)
+        {
+            await dataStream.FlushAsync();
+            dataStream.Close();
+            dataStream = null;
+        }
+        if (dataClient != null)
+        {
+            dataClient.Close();
+            dataClient = null;
         }
     }
 
     public bool SendCommand(string command)
     {
-        if (stream != null && IsConnected)
+        if (commandStream != null && IsCommandConnected)
         {
             byte[] data = Encoding.ASCII.GetBytes(command);
-            stream.Write(data, 0, data.Length);
+            commandStream.Write(data, 0, data.Length);
             return true;
         }
         return false;
+    }
+
+    // Method to start listening for data on the data stream
+    public async Task<string> ReceiveDataAsync()
+    {
+        if (dataStream != null && IsDataConnected)
+        {
+            byte[] buffer = new byte[1024];
+            int bytesRead = await dataStream.ReadAsync(buffer, 0, buffer.Length);
+            return Encoding.ASCII.GetString(buffer, 0, bytesRead);
+        }
+        return null;
     }
 
     // Additional event or delegate for connection status updates can be added here.
