@@ -30,12 +30,24 @@
         </StackPanel>
 
         <!-- Input options on the left side -->
+
         <StackPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Top">
-            <Label Content="Command:"/>
-            <TextBox x:Name="CommandTextBox" Width="200" Height="23" Margin="5,5"/>
+            <Label Content="Base:"/>
+            <TextBox x:Name="BaseTextBox" Width="200" Height="23" Margin="5,5" Text="0"/>
+            <Label Content="Shoulder:"/>
+            <TextBox x:Name="ShoulderTextBox" Width="200" Height="23" Margin="5,5" Text="-1.57"/>
+            <Label Content="Elbow:"/>
+            <TextBox x:Name="ElbowTextBox" Width="200" Height="23" Margin="5,5" Text="0.26"/>
+            <Label Content="Wrist1:"/>
+            <TextBox x:Name="Wrist1TextBox" Width="200" Height="23" Margin="5,5" Text="4.19"/>
+            <Label Content="Wrist2:"/>
+            <TextBox x:Name="Wrist2TextBox" Width="200" Height="23" Margin="5,5" Text="0"/>
+            <Label Content="Wrist3:"/>
+            <TextBox x:Name="Wrist3TextBox" Width="200" Height="23" Margin="5,5" Text="3.4"/>
             <Button Content="Send Command" Click="SendCommandButton_Click" Margin="5,5"/>
             <Button Content="Disconnect" Click="DisconnectButton_Click" Margin="5,5"/>
         </StackPanel>
+
 
         <!-- Output options on the right side -->
         <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Top">

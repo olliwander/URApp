@@ -34,8 +34,7 @@ namespace URApp
                 UpdateStatusLight(Colors.Red);
             }
         }
-
-        // Send command button event handler
+        // send kommando til armen
         private void SendCommandButton_Click(object sender, RoutedEventArgs e)
         {
             if (!connectionManager.IsConnected)
@@ -44,8 +43,17 @@ namespace URApp
                 return;
             }
 
-            string pose = "p[0.22,0.24,0.5,0.1,-0.5,-0.1]"; // Example pose
-            string command = $"movej({pose}, a=1.2, v=0.25, t=0, r=0)\n"; // Example command
+            // Read values from TextBoxes
+            double baseValue = double.Parse(BaseTextBox.Text);
+            double shoulderValue = double.Parse(ShoulderTextBox.Text);
+            double elbowValue = double.Parse(ElbowTextBox.Text);
+            double wrist1Value = double.Parse(Wrist1TextBox.Text);
+            double wrist2Value = double.Parse(Wrist2TextBox.Text);
+            double wrist3Value = double.Parse(Wrist3TextBox.Text);
+
+            // Format the pose string with the input values
+            string pose = $"p[{baseValue},{shoulderValue},{elbowValue},{wrist1Value},{wrist2Value},{wrist3Value}]";
+            string command = $"movej({pose}, a=1, v=0.25, t=0, r=0)\n";
 
             bool isCommandSent = connectionManager.SendCommand(command);
             if (isCommandSent)
@@ -54,8 +62,10 @@ namespace URApp
                 MessageBox.Show("Failed to send command.");
         }
 
-        // Disconnect button event handler
-        private async void DisconnectButton_Click(object sender, RoutedEventArgs e)
+    
+
+    // Disconnect button event handler
+    private async void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
             await connectionManager.DisconnectAsync();
             UpdateStatusLight(Colors.Red);
