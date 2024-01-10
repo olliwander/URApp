@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Net;
-using System.Net.Sockets;
-using System.Text;
 using System.Windows;
 using System.Windows.Media;
 
@@ -9,112 +6,70 @@ namespace URApp
 {
     public partial class MainWindow : Window
     {
-        private TcpClient client;
-        private NetworkStream stream;
+        private RobotConnectionManager connectionManager;
 
         public MainWindow()
         {
             InitializeComponent();
-            IpTextBox.Text = "172.20.254.205";
-            PortTextBox.Text = "30002";
-            client = new TcpClient(); 
+            connectionManager = new RobotConnectionManager();
+            IpTextBox.Text = "172.20.254.205"; // Default IP
+            PortTextBox.Text = "30002"; // Default Port
         }
 
-        // Connectknap
-        private void ConnectButton_Click(object sender, RoutedEventArgs e)
+        // Connect button event handler
+        private async void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
-            string ipAddress = IpTextBox.Text; 
-            int port;
+            try
+            {
+                string ipAddress = IpTextBox.Text;
+                int port = int.Parse(PortTextBox.Text); // Let the exception be caught if not a valid number
 
-            if (!IPAddress.TryParse(ipAddress, out IPAddress ip))
-            {
-                MessageBox.Show("Please enter a valid IP address.");
-                return;
+                await connectionManager.ConnectAsync(ipAddress, port);
+                UpdateStatusLight(Colors.Green);
             }
-
-            if (!int.TryParse(PortTextBox.Text, out port) || port < 1 || port > 65535)
+            catch (Exception ex)
             {
-                MessageBox.Show("Please enter a valid port number.");
-                return;
-            }
-            // Attempt to connect if not already connected
-            if (!client.Connected)
-            {
-                try
-                {
-                    client.Connect(ipAddress, port);
-                    stream = client.GetStream();
-                    StatusLight.Fill = new SolidColorBrush(Colors.Green);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show($"Connection failed: {ex.Message}");
-                    StatusLight.Fill = new SolidColorBrush(Colors.Red);
-                }
+                MessageBox.Show($"Connection failed: {ex.Message}");
+                UpdateStatusLight(Colors.Red);
             }
         }
 
-        // Event handler for sending a command
+        // Send command button event handler
         private void SendCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            if (!client.Connected)
+            if (!connectionManager.IsConnected)
             {
                 MessageBox.Show("No active connection. Please connect to the robot first.");
                 return;
             }
 
-            // Example pose - replace with actual values as needed
-            string pose = "p[-0.02,0.44,0.2,0.1,-3.5,-2]"; // Pose in base frame (e.g., x=200 mm, y=300 mm, z=500 mm, rx=0, ry=0, rz=180 degrees)
+            string pose = "p[-0.02,0.44,0.2,0.1,-3.5,-2]"; // Example pose
+            string command = $"movej({pose}, a=1.2, v=0.25, t=0, r=0)\n"; // Example command
 
-            // Construct the command with the pose and other parameters
-            string command = $"movej({pose}, a=1.2, v=0.25, t=0, r=0)\n"; // \n is important for command termination
-
-            bool isCommandSent = SendCommand(command);
-
+            bool isCommandSent = connectionManager.SendCommand(command);
             if (isCommandSent)
-            {
-                MessageBox.Show("movej command sent successfully.");
-            }
+                MessageBox.Show("Command sent successfully.");
             else
-            {
-                MessageBox.Show("Failed to send the movej command.");
-            }
+                MessageBox.Show("Failed to send command.");
         }
 
-
-        // Send kommando når der er forbindelse men virker det når jeg opdaterer herigennem? 
-        private bool SendCommand(string command)
+        // Disconnect button event handler
+        private async void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
-            if (stream != null && client.Connected)
-            {
-                byte[] data = Encoding.ASCII.GetBytes(command);
-                stream.Write(data, 0, data.Length);
-                return true;
-            }
-            return false;
+            await connectionManager.DisconnectAsync();
+            UpdateStatusLight(Colors.Red);
         }
 
-        // Method to disconnect the client
-        private void Disconnect()
+        // Update the status light based on connection status
+        private void UpdateStatusLight(Color color)
         {
-            if (client != null && client.Connected)
-            {
-                stream.Close();
-                client.Close();
-            }
+            StatusLight.Fill = new SolidColorBrush(color);
         }
 
-        // Event handler for disconnecting
-        private void DisconnectButton_Click(object sender, RoutedEventArgs e)
+        // Override OnClosed to ensure network resources are released
+        protected override async void OnClosed(EventArgs e)
         {
-            Disconnect();
-            StatusLight.Fill = new SolidColorBrush(Colors.Red);
-        }
-
-        // Override OnClosed to ensure the network resources are released
-        protected override void OnClosed(EventArgs e)
-        {
-            Disconnect();
+            await connectionManager.DisconnectAsync();
             base.OnClosed(e);
         }
     }
