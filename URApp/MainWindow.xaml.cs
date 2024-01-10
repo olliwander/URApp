@@ -20,7 +20,7 @@ namespace URApp
             client = new TcpClient(); 
         }
 
-        // Event handler for the Connect button click
+        // Connectknap
         private void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
             string ipAddress = IpTextBox.Text; 
