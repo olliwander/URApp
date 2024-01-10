@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace URApp
 {
-    public partial class Login : Window // Make sure this class name matches the x:Class in your XAML file
+    public partial class Login : Window 
     {
         public Login()
         {
