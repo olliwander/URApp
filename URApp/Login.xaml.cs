@@ -16,8 +16,6 @@ namespace URApp
         {
             string Sasha = "sasha";
             string SashaPW = "sasha";
-
-            // Check if the entered credentials match the hardcoded ones
             if (username == Sasha && password == SashaPW)
             {
                 return true;
