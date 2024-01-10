@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace URApp
 {
-    public partial class Login : Window //fuck dig med dit grimme fjæs sasha
+    public partial class Login : Window 
     {
         public Login()
         {
