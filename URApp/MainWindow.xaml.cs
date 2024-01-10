@@ -54,7 +54,7 @@ namespace URApp
             }
         }
 
-        // Event handler for sending a command
+        // Send kommando
         private void SendCommandButton_Click(object sender, RoutedEventArgs e)
         {
             string command = CommandTextBox.Text;
