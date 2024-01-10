@@ -15,7 +15,7 @@ namespace URApp
         public MainWindow()
         {
             InitializeComponent();
-            IpTextBox.Text = "172.20.254.201";
+            IpTextBox.Text = "172.20.254.205";
             PortTextBox.Text = "30002";
             client = new TcpClient(); 
         }
@@ -57,34 +57,30 @@ namespace URApp
         // Event handler for sending a command
         private void SendCommandButton_Click(object sender, RoutedEventArgs e)
         {
-            string command = CommandTextBox.Text;
-
             if (!client.Connected)
             {
                 MessageBox.Show("No active connection. Please connect to the robot first.");
                 return;
             }
 
-            if (!string.IsNullOrWhiteSpace(command))
-            {
-                // Append the necessary newline character to the command as required by the robot
-                command += "\n";
-                bool isCommandSent = SendCommand(command);
+            // Example pose - replace with actual values as needed
+            string pose = "p[-0.02,0.44,0.2,0.1,-3.5,-2]"; // Pose in base frame (e.g., x=200 mm, y=300 mm, z=500 mm, rx=0, ry=0, rz=180 degrees)
 
-                if (isCommandSent)
-                {
-                    MessageBox.Show("Command sent successfully.");
-                }
-                else
-                {
-                    MessageBox.Show("Failed to send the command.");
-                }
+            // Construct the command with the pose and other parameters
+            string command = $"movej({pose}, a=1.2, v=0.25, t=0, r=0)\n"; // \n is important for command termination
+
+            bool isCommandSent = SendCommand(command);
+
+            if (isCommandSent)
+            {
+                MessageBox.Show("movej command sent successfully.");
             }
             else
             {
-                MessageBox.Show("Please enter a command.");
+                MessageBox.Show("Failed to send the movej command.");
             }
         }
+
 
         // Send kommando når der er forbindelse men virker det når jeg opdaterer herigennem? 
         private bool SendCommand(string command)
