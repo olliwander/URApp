@@ -20,7 +20,7 @@
         </Grid.RowDefinitions>
 
         <!-- Connection controls -->
-        <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
+        <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Top">
             <Label Content="IP Adresse:"/>
             <TextBox x:Name="IpTextBox" Width="120" Margin="5,0"/>
             <Label Content="Port:"/>
@@ -37,25 +37,13 @@
             <Button Content="Disconnect" Click="DisconnectButton_Click" Margin="5,5"/>
         </StackPanel>
 
-        <!-- Output Section -->
-        <StackPanel Grid.Column="1" Grid.Row="0">
-            <TextBlock Text="Actual TCP Pose" FontWeight="Bold"/>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="X:"/>
-                <TextBox x:Name="TcpPoseX" Width="80"/>
-                <TextBlock Text="Y:"/>
-                <TextBox x:Name="TcpPoseY" Width="80"/>
-                <TextBlock Text="Z:"/>
-                <TextBox x:Name="TcpPoseZ" Width="80"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="RX:"/>
-                <TextBox x:Name="TcpPoseRX" Width="80"/>
-                <TextBlock Text="RY:"/>
-                <TextBox x:Name="TcpPoseRY" Width="80"/>
-                <TextBlock Text="RZ:"/>
-                <TextBox x:Name="TcpPoseRZ" Width="80"/>
-            </StackPanel>
+        <!-- Output options on the right side -->
+        <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Top">
+            <!-- Output UI elements would go here -->
+            <!-- Example output label and textbox -->
+            <Label Content="Actual TCP Pose:"/>
+            <TextBox x:Name="ActualTcpPoseTextBox" Width="200" Height="23" Margin="5,5"/>
+            <!-- Add more output UI elements as needed -->
         </StackPanel>
     </Grid>
 </Window>
