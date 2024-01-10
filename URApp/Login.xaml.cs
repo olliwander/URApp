@@ -14,24 +14,33 @@ namespace URApp
 
         public bool ValidateLogin(string username, string password)
         {
+            string Sasha = "sasha";
+            string SashaPW = "sasha";
+
+            // Check if the entered credentials match the hardcoded ones
+            if (username == Sasha && password == SashaPW)
+            {
+                return true;
+            }
+
             string connectionString = ConfigurationManager.ConnectionStrings["MyDBConnectionString"].ConnectionString;
 
             using (SqlConnection con = new SqlConnection(connectionString))
             {
-                con.Open();
-                string query = "SELECT COUNT(1) FROM users WHERE username=@username AND password=@password";
-                SqlCommand cmd = new SqlCommand(query, con);
-                cmd.Parameters.AddWithValue("@username", username);
-                cmd.Parameters.AddWithValue("@password", password); 
+                try
+                {
+                    con.Open();
+                    string query = "SELECT COUNT(1) FROM users WHERE username=@username AND password=@password";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@username", username);
+                    cmd.Parameters.AddWithValue("@password", password);
 
-                int count = Convert.ToInt32(cmd.ExecuteScalar());
-                if (count == 1)
-                {
-                    return true; 
+                    int count = Convert.ToInt32(cmd.ExecuteScalar());
+                    return count == 1;
                 }
-                else
+                catch
                 {
-                    return false; 
+                    return false;
                 }
             }
         }
