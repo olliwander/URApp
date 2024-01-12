@@ -1,20 +1,22 @@
 ﻿using System;
+using System.Collections.Generic; // For List<>
 using System.Windows;
 using System.Windows.Media;
-using System.Windows.Threading;
+using URApp;
 
 namespace URApp
 {
     public partial class MainWindow : Window
     {
         private RobotConnectionManager connectionManager;
+        private List<string> waypoints = new List<string>(); // List to store waypoints
 
         public MainWindow()
         {
             InitializeComponent();
             connectionManager = new RobotConnectionManager();
             IpTextBox.Text = "172.20.254.205"; // Robot5 IP
-            PortTextBox.Text = "30002"; // Porten
+            PortTextBox.Text = "30002"; // Port
         }
 
         // Connect button event handler
@@ -34,7 +36,8 @@ namespace URApp
                 UpdateStatusLight(Colors.Red);
             }
         }
-        // send kommando til armen
+
+        // Send command button event handler
         private void SendCommandButton_Click(object sender, RoutedEventArgs e)
         {
             if (!connectionManager.IsConnected)
@@ -53,7 +56,7 @@ namespace URApp
 
             // Format the pose string with the input values
             string pose = $"p[{baseValue},{shoulderValue},{elbowValue},{wrist1Value},{wrist2Value},{wrist3Value}]";
-            string command = $"movej({pose}, a=1, v=0.25, t=0, r=0)\n";
+            string command = $"movej({pose}, a=1.2, v=0.25, t=0, r=0)\n";
 
             bool isCommandSent = connectionManager.SendCommand(command);
             if (isCommandSent)
@@ -62,10 +65,8 @@ namespace URApp
                 MessageBox.Show("Failed to send command.");
         }
 
-    
-
-    // Disconnect button event handler
-    private async void DisconnectButton_Click(object sender, RoutedEventArgs e)
+        // Disconnect button event handler
+        private async void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
             await connectionManager.DisconnectAsync();
             UpdateStatusLight(Colors.Red);
@@ -83,5 +84,50 @@ namespace URApp
             await connectionManager.DisconnectAsync();
             base.OnClosed(e);
         }
+
+        // Waypoint button click event handlers
+        private void WaypointButton1_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 1");
+        private void WaypointButton2_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 2");
+        private void WaypointButton3_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 3");
+        private void WaypointButton4_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 4");
+        private void WaypointButton5_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 5");
+        private void WaypointButton6_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 6");
+        private void WaypointButton7_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 7");
+        private void WaypointButton8_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 8");
+        private void WaypointButton9_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 9");
+
+        // Load and display waypoint data
+        private void LoadWaypointData(string waypoint)
+        {
+            string[] waypointData = DatabaseHelper.GetWaypointData(waypoint);
+            if (waypointData != null && waypointData.Length == 6)
+            {
+                BaseTextBox.Text = waypointData[0];
+                ShoulderTextBox.Text = waypointData[1];
+                ElbowTextBox.Text = waypointData[2];
+                Wrist1TextBox.Text = waypointData[3];
+                Wrist2TextBox.Text = waypointData[4];
+                Wrist3TextBox.Text = waypointData[5];
+
+                waypoints.Add(waypoint);
+                UpdateWaypointListBox();
+            }
+            else
+            {
+                // Handle case where waypoint data is not found
+                MessageBox.Show($"Waypoint data for '{waypoint}' not found.");
+            }
+        }
+
+        private void UpdateWaypointListBox()
+        {
+            WaypointListBox.Items.Clear();
+            foreach (var wp in waypoints)
+            {
+                WaypointListBox.Items.Add(wp);
+            }
+        }
+
+        // ... other methods ...
     }
 }
