@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic; // For List<>
+using System.Linq;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -40,6 +42,7 @@ namespace URApp
         }
 
         // Send command button event handler
+        // Send command button event handler
         private void SendCommandButton_Click(object sender, RoutedEventArgs e)
         {
             if (!connectionManager.IsConnected)
@@ -48,32 +51,48 @@ namespace URApp
                 return;
             }
 
-            foreach (var waypointName in waypoints)
+            StringBuilder programCommands = new StringBuilder(); // To store commands for the program
+
+            // Add the program header with def programname():
+            programCommands.AppendLine("def programname():");
+
+            // Assuming waypointsBox is a ListBox or a similar control containing your waypoints
+            foreach (var waypointItem in WaypointListBox.Items)
             {
+                string waypointName = waypointItem.ToString();
+
                 if (waypointCache.TryGetValue(waypointName, out string[] waypointData) && waypointData.Length == 6)
                 {
-                    // Format the pose string with the waypoint data
-                    string pose = $"p[{waypointData[0]},{waypointData[1]},{waypointData[2]},{waypointData[3]},{waypointData[4]},{waypointData[5]}]";
-                    string command = $"movej({pose}, a=1.2, v=0.25, t=0, r=0)\n";
+                    // Convert values from commas to periods
+                    string[] convertedValues = waypointData.Select(value => value.Replace(',', '.')).ToArray();
 
-                    bool isCommandSent = connectionManager.SendCommand(command);
-                    if (!isCommandSent)
-                    {
-                        MessageBox.Show($"Failed to send command for {waypointName}.");
-                        return; // Stop execution on failure
-                    }
+                    // Format the pose string with the converted waypoint data
+                    string pose = $"p[{string.Join(",", convertedValues)}]";
+
+                    // Append the current movej command to the programCommands without "breakAfter"
+                    programCommands.AppendLine($"  movej({pose}, a=1.2, v=1, t=0, r=0)");
                 }
                 else
                 {
-                    MessageBox.Show($"Waypoint data for '{waypointName}' not found in cache.");
-                    return; // Stop execution if data not found
+                    MessageBox.Show($"Waypoint data for '{waypointName}' not found in cache or does not have the expected length (6).");
+                    return; // Stop execution if data not found or incorrect length
                 }
-
-                // Optional: Add a delay between commands if needed
-                // await Task.Delay(TimeSpan.FromSeconds(1)); // For example, a 1-second delay
             }
 
-            MessageBox.Show("All commands sent successfully.");
+            // Add the program footer with end
+            programCommands.AppendLine("end");
+
+            // Send the programCommands to the robot
+            bool isProgramCommandSent = connectionManager.SendCommand(programCommands.ToString());
+
+            if (isProgramCommandSent)
+            {
+                MessageBox.Show("Program command sent successfully.");
+            }
+            else
+            {
+                MessageBox.Show("Failed to send program command.");
+            }
         }
 
 
@@ -219,4 +238,3 @@ namespace URApp
 
     // ... other methods ...
 }
-
