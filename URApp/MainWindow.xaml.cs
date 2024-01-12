@@ -86,15 +86,15 @@ namespace URApp
         }
 
         // Waypoint button click event handlers
-        private void WaypointButton1_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 1");
-        private void WaypointButton2_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 2");
-        private void WaypointButton3_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 3");
-        private void WaypointButton4_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 4");
-        private void WaypointButton5_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 5");
-        private void WaypointButton6_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 6");
-        private void WaypointButton7_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 7");
-        private void WaypointButton8_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 8");
-        private void WaypointButton9_Click(object sender, RoutedEventArgs e) => LoadWaypointData("Waypoint 9");
+        private void WaypointButton1_Click(object sender, RoutedEventArgs e) => LoadWaypointData("waypoint_1");
+        private void WaypointButton2_Click(object sender, RoutedEventArgs e) => LoadWaypointData("waypoint_2");
+        private void WaypointButton3_Click(object sender, RoutedEventArgs e) => LoadWaypointData("waypoint_3");
+        private void WaypointButton4_Click(object sender, RoutedEventArgs e) => LoadWaypointData("waypoint_4");
+        private void WaypointButton5_Click(object sender, RoutedEventArgs e) => LoadWaypointData("waypoint_5");
+        private void WaypointButton6_Click(object sender, RoutedEventArgs e) => LoadWaypointData("waypoint_6");
+        private void WaypointButton7_Click(object sender, RoutedEventArgs e) => LoadWaypointData("waypoint_7");
+        private void WaypointButton8_Click(object sender, RoutedEventArgs e) => LoadWaypointData("waypoint_8");
+        private void WaypointButton9_Click(object sender, RoutedEventArgs e) => LoadWaypointData("waypoint_9");
 
         // Load and display waypoint data
         private void LoadWaypointData(string waypoint)
@@ -119,6 +119,27 @@ namespace URApp
             }
         }
 
+        private void RemoveWaypointButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (WaypointListBox.SelectedItem != null)
+            {
+                // Remove the selected waypoint from the list
+                string selectedWaypoint = WaypointListBox.SelectedItem.ToString();
+                waypoints.Remove(selectedWaypoint);
+
+                // Update the ListBox
+                UpdateWaypointListBox();
+
+                // Optionally, you can also clear the corresponding fields
+                // if they currently show the data of the removed waypoint
+                ClearWaypointDataFields();
+            }
+            else
+            {
+                MessageBox.Show("Please select a waypoint to remove.");
+            }
+        }
+
         private void UpdateWaypointListBox()
         {
             WaypointListBox.Items.Clear();
@@ -128,6 +149,19 @@ namespace URApp
             }
         }
 
+        private void ClearWaypointDataFields()
+        {
+            BaseTextBox.Text = "";
+            ShoulderTextBox.Text = "";
+            ElbowTextBox.Text = "";
+            Wrist1TextBox.Text = "";
+            Wrist2TextBox.Text = "";
+            Wrist3TextBox.Text = "";
+        }
+
         // ... other methods ...
     }
+
+    // ... other methods ...
 }
+
