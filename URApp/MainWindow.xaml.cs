@@ -13,8 +13,8 @@ namespace URApp
         {
             InitializeComponent();
             connectionManager = new RobotConnectionManager();
-            IpTextBox.Text = "172.20.254.205"; // Default IP
-            PortTextBox.Text = "30002"; // Default Port
+            IpTextBox.Text = "172.20.254.205"; // Robot5 IP
+            PortTextBox.Text = "30002"; // Porten
         }
 
         // Connect button event handler
