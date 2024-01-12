@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Collections.Generic; // For List<>
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
-using URApp;
 
 namespace URApp
 {
     public partial class MainWindow : Window
     {
         private RobotConnectionManager connectionManager;
-        private List<string> waypoints = new List<string>(); // List to store waypoints
+        private List<string> waypoints = new List<string>();
+        private Dictionary<string, string[]> waypointCache = new Dictionary<string, string[]>();
+
 
         public MainWindow()
         {
@@ -46,33 +48,43 @@ namespace URApp
                 return;
             }
 
-            // Read values from TextBoxes
-            double baseValue = double.Parse(BaseTextBox.Text);
-            double shoulderValue = double.Parse(ShoulderTextBox.Text);
-            double elbowValue = double.Parse(ElbowTextBox.Text);
-            double wrist1Value = double.Parse(Wrist1TextBox.Text);
-            double wrist2Value = double.Parse(Wrist2TextBox.Text);
-            double wrist3Value = double.Parse(Wrist3TextBox.Text);
+            foreach (var waypointName in waypoints)
+            {
+                if (waypointCache.TryGetValue(waypointName, out string[] waypointData) && waypointData.Length == 6)
+                {
+                    // Format the pose string with the waypoint data
+                    string pose = $"p[{waypointData[0]},{waypointData[1]},{waypointData[2]},{waypointData[3]},{waypointData[4]},{waypointData[5]}]";
+                    string command = $"movej({pose}, a=1.2, v=0.25, t=0, r=0)\n";
 
-            // Format the pose string with the input values
-            string pose = $"p[{baseValue},{shoulderValue},{elbowValue},{wrist1Value},{wrist2Value},{wrist3Value}]";
-            string command = $"movej({pose}, a=1.2, v=0.25, t=0, r=0)\n";
+                    bool isCommandSent = connectionManager.SendCommand(command);
+                    if (!isCommandSent)
+                    {
+                        MessageBox.Show($"Failed to send command for {waypointName}.");
+                        return; // Stop execution on failure
+                    }
+                }
+                else
+                {
+                    MessageBox.Show($"Waypoint data for '{waypointName}' not found in cache.");
+                    return; // Stop execution if data not found
+                }
 
-            bool isCommandSent = connectionManager.SendCommand(command);
-            if (isCommandSent)
-                MessageBox.Show("Command sent successfully.");
-            else
-                MessageBox.Show("Failed to send command.");
+                // Optional: Add a delay between commands if needed
+                // await Task.Delay(TimeSpan.FromSeconds(1)); // For example, a 1-second delay
+            }
+
+            MessageBox.Show("All commands sent successfully.");
         }
 
-        // Disconnect button event handler
+
+        // Disconnect button
         private async void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
             await connectionManager.DisconnectAsync();
             UpdateStatusLight(Colors.Red);
         }
 
-        // Update the status light based on connection status
+        // Status lampen øverst
         private void UpdateStatusLight(Color color)
         {
             StatusLight.Fill = new SolidColorBrush(color);
@@ -83,6 +95,27 @@ namespace URApp
         {
             await connectionManager.DisconnectAsync();
             base.OnClosed(e);
+        }
+
+        private void SaveWaypointData_Click(object sender, RoutedEventArgs e)
+        {
+            if (WaypointListBox.SelectedItem != null)
+            {
+                string selectedWaypoint = WaypointListBox.SelectedItem.ToString();
+                waypointCache[selectedWaypoint] = new string[]
+                {
+            BaseTextBox.Text,
+            ShoulderTextBox.Text,
+            ElbowTextBox.Text,
+            Wrist1TextBox.Text,
+            Wrist2TextBox.Text,
+            Wrist3TextBox.Text
+                };
+            }
+            else
+            {
+                MessageBox.Show("Please select a waypoint to save.");
+            }
         }
 
         // Waypoint button click event handlers
@@ -99,23 +132,36 @@ namespace URApp
         // Load and display waypoint data
         private void LoadWaypointData(string waypoint)
         {
-            string[] waypointData = DatabaseHelper.GetWaypointData(waypoint);
-            if (waypointData != null && waypointData.Length == 6)
+            // Check if the waypoint data is already in the cache
+            if (!waypointCache.ContainsKey(waypoint))
             {
-                BaseTextBox.Text = waypointData[0];
-                ShoulderTextBox.Text = waypointData[1];
-                ElbowTextBox.Text = waypointData[2];
-                Wrist1TextBox.Text = waypointData[3];
-                Wrist2TextBox.Text = waypointData[4];
-                Wrist3TextBox.Text = waypointData[5];
+                string[] waypointData = DatabaseHelper.GetWaypointData(waypoint);
+                if (waypointData != null && waypointData.Length == 6)
+                {
+                    // Cache the waypoint data
+                    waypointCache[waypoint] = waypointData;
+                }
+                else
+                {
+                    MessageBox.Show($"Waypoint data for '{waypoint}' not found.");
+                    return;
+                }
+            }
 
+            // Use the cached data
+            string[] cachedData = waypointCache[waypoint];
+            BaseTextBox.Text = cachedData[0];
+            ShoulderTextBox.Text = cachedData[1];
+            ElbowTextBox.Text = cachedData[2];
+            Wrist1TextBox.Text = cachedData[3];
+            Wrist2TextBox.Text = cachedData[4];
+            Wrist3TextBox.Text = cachedData[5];
+
+            // Add waypoint to the list and update ListBox, if not already added
+            if (!waypoints.Contains(waypoint))
+            {
                 waypoints.Add(waypoint);
                 UpdateWaypointListBox();
-            }
-            else
-            {
-                // Handle case where waypoint data is not found
-                MessageBox.Show($"Waypoint data for '{waypoint}' not found.");
             }
         }
 
@@ -146,6 +192,15 @@ namespace URApp
             foreach (var wp in waypoints)
             {
                 WaypointListBox.Items.Add(wp);
+            }
+        }
+
+        private void WaypointListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (WaypointListBox.SelectedItem != null)
+            {
+                string selectedWaypoint = WaypointListBox.SelectedItem.ToString();
+                LoadWaypointData(selectedWaypoint);
             }
         }
 
