@@ -1,5 +1,4 @@
-﻿
-def rallekgr3():
+﻿def rallekgr3():
   global _hidden_verificationVariable=0
   set_standard_analog_input_domain(0, 1)
   set_standard_analog_input_domain(1, 1)
