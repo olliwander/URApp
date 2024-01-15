@@ -71,5 +71,14 @@
             <Button Content="Remove Selected Waypoint" Click="RemoveWaypointButton_Click" Margin="5"/>
             <Button Content="Start program" Click="SendCommandButton_Click" Margin="5,5"/>
         </StackPanel>
+        <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" Grid.ColumnSpan="2">
+            <ComboBox x:Name="ScriptComboBox" Margin="5" Height="25">
+            </ComboBox>
+            <Button Content="Start Program" Click="StartProgramButton_Click" Margin="5"/>
+            <Button Content="Stop" Click="StopButton_Click" Margin="5"/>
+        </StackPanel>
+
+
+
     </Grid>
 </Window>

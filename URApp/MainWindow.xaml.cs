@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Reflection;
 using System.Collections.Generic; // For List<>
 using System.Linq;
 using System.Text;
@@ -21,15 +23,16 @@ namespace URApp
             connectionManager = new RobotConnectionManager();
             IpTextBox.Text = "172.20.254.205"; // Robot5 IP
             PortTextBox.Text = "30002"; // Port
+
+            PopulateScriptComboBox();
         }
 
-        // Connect button event handler
         private async void ConnectButton_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 string ipAddress = IpTextBox.Text;
-                int port = int.Parse(PortTextBox.Text); // Let the exception be caught if not a valid number
+                int port = int.Parse(PortTextBox.Text); 
 
                 await connectionManager.ConnectAsync(ipAddress, port);
                 UpdateStatusLight(Colors.Green);
@@ -41,8 +44,6 @@ namespace URApp
             }
         }
 
-        // Send command button event handler
-        // Send command button event handler
         private void SendCommandButton_Click(object sender, RoutedEventArgs e)
         {
             if (!connectionManager.IsConnected)
@@ -51,38 +52,30 @@ namespace URApp
                 return;
             }
 
-            StringBuilder programCommands = new StringBuilder(); // To store commands for the program
+            StringBuilder programCommands = new StringBuilder(); 
 
-            // Add the program header with def programname():
             programCommands.AppendLine("def programname():");
 
-            // Assuming waypointsBox is a ListBox or a similar control containing your waypoints
             foreach (var waypointItem in WaypointListBox.Items)
             {
                 string waypointName = waypointItem.ToString();
 
                 if (waypointCache.TryGetValue(waypointName, out string[] waypointData) && waypointData.Length == 6)
                 {
-                    // Convert values from commas to periods
                     string[] convertedValues = waypointData.Select(value => value.Replace(',', '.')).ToArray();
-
-                    // Format the pose string with the converted waypoint data
                     string pose = $"p[{string.Join(",", convertedValues)}]";
 
-                    // Append the current movej command to the programCommands without "breakAfter"
                     programCommands.AppendLine($"  movej({pose}, a=1.2, v=1, t=0, r=0)");
                 }
                 else
                 {
                     MessageBox.Show($"Waypoint data for '{waypointName}' not found in cache or does not have the expected length (6).");
-                    return; // Stop execution if data not found or incorrect length
+                    return; 
                 }
             }
 
-            // Add the program footer with end
             programCommands.AppendLine("end");
 
-            // Send the programCommands to the robot
             bool isProgramCommandSent = connectionManager.SendCommand(programCommands.ToString());
 
             if (isProgramCommandSent)
@@ -95,21 +88,15 @@ namespace URApp
             }
         }
 
-
-        // Disconnect button
         private async void DisconnectButton_Click(object sender, RoutedEventArgs e)
         {
             await connectionManager.DisconnectAsync();
             UpdateStatusLight(Colors.Red);
         }
-
-        // Status lampen øverst
         private void UpdateStatusLight(Color color)
         {
             StatusLight.Fill = new SolidColorBrush(color);
         }
-
-        // Override OnClosed to ensure network resources are released
         protected override async void OnClosed(EventArgs e)
         {
             await connectionManager.DisconnectAsync();
@@ -137,7 +124,6 @@ namespace URApp
             }
         }
 
-        // Waypoint button click event handlers
         private void WaypointButton1_Click(object sender, RoutedEventArgs e) => LoadWaypointData("waypoint_1");
         private void WaypointButton2_Click(object sender, RoutedEventArgs e) => LoadWaypointData("waypoint_2");
         private void WaypointButton3_Click(object sender, RoutedEventArgs e) => LoadWaypointData("waypoint_3");
@@ -147,17 +133,13 @@ namespace URApp
         private void WaypointButton7_Click(object sender, RoutedEventArgs e) => LoadWaypointData("waypoint_7");
         private void WaypointButton8_Click(object sender, RoutedEventArgs e) => LoadWaypointData("waypoint_8");
         private void WaypointButton9_Click(object sender, RoutedEventArgs e) => LoadWaypointData("waypoint_9");
-
-        // Load and display waypoint data
         private void LoadWaypointData(string waypoint)
         {
-            // Check if the waypoint data is already in the cache
             if (!waypointCache.ContainsKey(waypoint))
             {
                 string[] waypointData = DatabaseHelper.GetWaypointData(waypoint);
                 if (waypointData != null && waypointData.Length == 6)
                 {
-                    // Cache the waypoint data
                     waypointCache[waypoint] = waypointData;
                 }
                 else
@@ -166,8 +148,6 @@ namespace URApp
                     return;
                 }
             }
-
-            // Use the cached data
             string[] cachedData = waypointCache[waypoint];
             BaseTextBox.Text = cachedData[0];
             ShoulderTextBox.Text = cachedData[1];
@@ -176,7 +156,6 @@ namespace URApp
             Wrist2TextBox.Text = cachedData[4];
             Wrist3TextBox.Text = cachedData[5];
 
-            // Add waypoint to the list and update ListBox, if not already added
             if (!waypoints.Contains(waypoint))
             {
                 waypoints.Add(waypoint);
@@ -188,15 +167,10 @@ namespace URApp
         {
             if (WaypointListBox.SelectedItem != null)
             {
-                // Remove the selected waypoint from the list
                 string selectedWaypoint = WaypointListBox.SelectedItem.ToString();
                 waypoints.Remove(selectedWaypoint);
 
-                // Update the ListBox
                 UpdateWaypointListBox();
-
-                // Optionally, you can also clear the corresponding fields
-                // if they currently show the data of the removed waypoint
                 ClearWaypointDataFields();
             }
             else
@@ -233,8 +207,77 @@ namespace URApp
             Wrist3TextBox.Text = "";
         }
 
-        // ... other methods ...
-    }
+        private void PopulateScriptComboBox()
+        {
+            string baseDirectory = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\.."));
+            string folderPath = Path.Combine(baseDirectory, "scripts");
 
-    // ... other methods ...
+            Console.WriteLine($"baseDirectory: {baseDirectory}");
+            Console.WriteLine($"folderPath: {folderPath}");
+
+            Console.ReadLine();
+
+
+            if (Directory.Exists(folderPath))
+            {
+                string[] scriptFiles = Directory.GetFiles(folderPath, "*.txt");
+                foreach (string scriptFile in scriptFiles)
+                {
+                    string scriptName = Path.GetFileNameWithoutExtension(scriptFile);
+                    ScriptComboBox.Items.Add(scriptName);
+                }
+            }
+        }
+
+        private void StartProgramButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!connectionManager.IsConnected)
+            {
+                MessageBox.Show("No active connection. Please connect to the robot first.");
+                return;
+            }
+
+            string selectedScript = ScriptComboBox.SelectedItem as string;
+
+            if (selectedScript != null)
+            {
+                string scriptCommand = $"runScript(\"{selectedScript}\")";
+                bool isScriptCommandSent = connectionManager.SendCommand(scriptCommand);
+
+                if (isScriptCommandSent)
+                {
+                    MessageBox.Show($"Script '{selectedScript}' started successfully.");
+                }
+                else
+                {
+                    MessageBox.Show($"Failed to start script '{selectedScript}'.");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Please select a script to start.");
+            }
+        }
+
+        private void StopButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!connectionManager.IsConnected)
+            {
+                MessageBox.Show("No active connection. Please connect to the robot first.");
+                return;
+            }
+
+            string stopScriptCommand = "stopl(10)";
+            bool isStopCommandSent = connectionManager.SendCommand(stopScriptCommand);
+
+            if (isStopCommandSent)
+            {
+                MessageBox.Show("Script stopped successfully.");
+            }
+            else
+            {
+                MessageBox.Show("Failed to stop the script.");
+            }
+        }
+    }
 }

@@ -139,9 +139,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="TextFile1.txt" />
-  </ItemGroup>
-  <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
@@ -161,6 +158,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="SQLCommands.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="scripts\Script1.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
