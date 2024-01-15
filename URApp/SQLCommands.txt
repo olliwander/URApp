@@ -13,7 +13,18 @@
 CREATE TABLE users (
     username VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
+    trusted BIT DEFAULT 0,
 );
+
+(ELLER )
+ALTER TABLE Users
+ADD trusted BIT DEFAULT 0;
+
+
+UPDATE Users
+SET trusted = 1
+WHERE username = 'admin';
+
 
 INSERT INTO waypoints (name, base, shoulder, elbow, wrist1, wrist2, wrist3)
 VALUES 
