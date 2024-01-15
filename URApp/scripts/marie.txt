@@ -1,6 +1,6 @@
-﻿
-def rallekgr3():
+﻿def unnamed():
   global _hidden_verificationVariable=0
+  set_target_payload(0.840000, [0.000000, -0.028000, 0.103400], [0.001151, 0.001151, 0.001151, 0.000000, 0.000000, 0.000000])
   set_standard_analog_input_domain(0, 1)
   set_standard_analog_input_domain(1, 1)
   set_tool_analog_input_domain(0, 1)
@@ -8,18 +8,16 @@ def rallekgr3():
   set_analog_outputdomain(0, 0)
   set_analog_outputdomain(1, 0)
   set_input_actions_to_default()
-  set_runstate_standard_digital_outputs([2])
-  set_runstate_standard_digital_output_to_value(2, 1)
   set_safety_mode_transition_hardness(1)
+  set_tcp(p[0.0,-0.09,0.2045,0.5236,0.0,0.0])
   set_tool_communication(True, 1000000, 2, 1, 1.5, 3.5)
   set_tool_output_mode(0)
   set_tool_digital_output_mode(0, 1)
   set_tool_digital_output_mode(1, 1)
   set_tool_voltage(24)
-  set_target_payload(0.840000, [0.000000, 0.000000, 0.110900], [0.001151, 0.001151, 0.001151, 0.000000, 0.000000, 0.000000])
-  set_tcp(p[0.0,0.0,0.2286,0.0,0.0,0.0])
   set_gravity([0.0, 0.0, 9.82])
   global inspectValue=999
+  global container_numb=0
   global BackSideCamera=p[0.0,0.125,0.0,-1.5699999999999992,-9.613477373306719E-17,-9.621135892678023E-17]
   global LeftSide=p[-0.1,0.0,0.0,1.558901676483412E-16,-1.5699999999999983,-7.915987226215928E-16]
   global RightSide=p[0.1,0.0,0.0,7.658519371305015E-20,1.5699999999999992,-1.9234613265984742E-16]
@@ -62,10 +60,10 @@ def rallekgr3():
   ON_DI_DUAL = 3
   on_robot_type = 3
   on_robot_cycle = 2.0
-  on_conn_ip = "172.20.254.103"
+  on_conn_ip = "172.20.254.108"
   on_tool_ip = "localhost"
   on_device_socket_port = 51234
-  on_conn_xmlrpc = rpc_factory("xmlrpc", "http://172.20.254.103:41414")
+  on_conn_xmlrpc = rpc_factory("xmlrpc", "http://172.20.254.108:41414")
   on_tool_xmlrpc = rpc_factory("xmlrpc", "http://localhost:41414")
   on_RPC = rpc_factory("xmlrpc", "http://127.0.0.1:31416")
   ON_DEBUG_LOG = False
@@ -1291,9 +1289,9 @@ def rallekgr3():
   end 
   
   #======    End of OnRobot RG Engine    ======#
-  rg_mounting_angle_arr[0] = 0.0
+  rg_mounting_angle_arr[0] = 0.523599
   rg_fingertip_arr[0] = 4.599999904632568
-  rg_Depth_arr[0] = 7.599999904632568
+  rg_Depth_arr[0] = 31.60000038146972
   textmsg(on_devices_primary_log, ": Eyes + Quick Changer + RG2 + [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]")
   on_follow_tcp = False
   on_tcp_active_is_primary = True
@@ -1753,75 +1751,59 @@ def rallekgr3():
   
   #======    End of OnRobot RG Run    ======#
   # end: URCap Installation Node
-  step_count_5b1103a8_8e6e_4f3c_8756_54d9adb465ac = 0.0
-  thread Step_Counter_Thread_a9141f45_9a82_45b1_9c3f_5e129ceb5a3f():
+  step_count_c6e31052_e94d_4315_85b5_03463dc38ec3 = 0.0
+  thread Step_Counter_Thread_5a23b870_3f36_45ce_b69c_d0e1e597fc42():
     while (True):
-      step_count_5b1103a8_8e6e_4f3c_8756_54d9adb465ac = step_count_5b1103a8_8e6e_4f3c_8756_54d9adb465ac + 1.0
+      step_count_c6e31052_e94d_4315_85b5_03463dc38ec3 = step_count_c6e31052_e94d_4315_85b5_03463dc38ec3 + 1.0
       sync()
     end
   end
-  run Step_Counter_Thread_a9141f45_9a82_45b1_9c3f_5e129ceb5a3f()
-  global Waypoint_1_p=p[.398132632802, -.153781727481, .142655729338, .101413979247, 3.070183660073, -.012039766241]
-  global Waypoint_1_q=[-0.048644367848531544, -1.9999548397459925, -0.7452955842018127, 4.388774080867432, 1.5679986476898193, 1.582387924194336]
-  global Waypoint_3_p=p[.393063423761, -.148730296469, .094218029072, -.085443137571, 3.140429543433, -.000062046518]
-  global Waypoint_3_q=[-0.041758362446920216, -2.016222139398092, -0.9255850315093994, 4.515470667476318, 1.574842929840088, 1.4692344665527344]
-  global Waypoint_8_p=p[.393052027669, -.148695395574, .009947679690, .085416734429, -3.140313750745, -.000064754571]
-  global Waypoint_8_q=[-0.04153806367983037, -2.0152799091734828, -1.3244893550872803, 4.913314375072279, 1.5758026838302612, 1.4705135822296143]
-  global Waypoint_4_p=p[.393063269858, -.148740302640, .081807175738, .085323928820, -3.140404981153, .000030967698]
-  global Waypoint_4_q=[-0.04171497026552373, -2.00579371074819, -1.0001399517059326, 4.579568548793457, 1.5749881267547607, 1.4694709777832031]
-  global Waypoint_7_p=p[.393063269858, -.148740302640, .081807175738, .085323928820, -3.140404981153, .000030967698]
-  global Waypoint_7_q=[-0.04171497026552373, -2.00579371074819, -1.0001399517059326, 4.579568548793457, 1.5749881267547607, 1.4694709777832031]
-  global Waypoint_5_p=p[.334856614009, -.456145897544, .104190745836, -.427287145650, -2.081321390902, 1.969377916215]
-  global Waypoint_5_q=[-0.058640305195943654, -2.8357745609679164, -0.3966705799102783, 3.445800943965576, 0.3263881802558899, 2.9610986709594727]
-  global Waypoint_6_p=p[.334857252730, -.456145545039, .068169054167, -.427457980438, -2.081378386198, 1.969371390904]
-  global Waypoint_6_q=[-0.05853492418398076, -2.887120386163229, -0.45906418561935425, 3.5599867540546875, 0.32715219259262085, 2.960756540298462]
-  global Waypoint_9_p=p[.338241043071, -.392780075007, .079840598949, -.427318430733, -2.081340919671, 1.969390795899]
-  global Waypoint_9_q=[0.08086421340703964, -2.7918793163695277, -0.6000924110412598, 3.544107599849365, 0.4640391170978546, 3.0264453887939453]
-  global Waypoint_2_p=p[.385430639689, -.304873355202, .168293827048, 1.485510889815, 2.194221784531, -.790797907724]
-  global Waypoint_2_q=[0.07688358426094055, -2.8776804409422816, 1.031182114277975, 3.3537885385700683, 0.8876915574073792, 2.8568975925445557]
+  run Step_Counter_Thread_5a23b870_3f36_45ce_b69c_d0e1e597fc42()
+  global Waypoint_3_p=p[-.033215704146, -.427930217069, .594194909442, 2.095796485838, .000434684996, .000271026834]
+  global Waypoint_3_q=[-1.732503072560121E-6, -1.5707747978015796, 0.2618044058429163, 4.188792391414307, 2.0747174858115613E-5, 3.4033772945404053]
+  global Waypoint_1_p=p[.074940832466, -.488276470853, .209328471105, -3.141434632597, .031134384496, .000023821716]
+  global Waypoint_1_q=[1.436110258102417, -0.7694536012462159, 0.009145561848775685, 4.950781780272283, -1.5136454741107386, 3.0435619354248047]
+  global Waypoint_2_p=p[.074932053204, -.488279283749, .006722798927, 3.141423867481, -.031184962487, -.000038276103]
+  global Waypoint_2_q=[1.4393428564071655, -0.9816590708545228, 1.4108541647540491, 3.761413260097168, -1.5148499647723597, 3.0409817695617676]
+  global Waypoint_4_p=p[.074934958747, -.488276912019, .196617733326, 3.141405244334, -.031177786701, -.000028372055]
+  global Waypoint_4_q=[1.4371328353881836, -0.9284853500178833, 0.39439088502992803, 4.724565458461203, -1.5145819822894495, 3.043023109436035]
+  global Waypoint_5_p=p[-.453637258753, -.195484087947, .196538443062, -2.466273347172, 1.945734297544, -.000204539622]
+  global Waypoint_5_q=[0.1209157183766365, -0.9283502858928223, 0.3943684736834925, 4.72472499588088, -1.5145342985736292, 3.042879104614258]
+  global Waypoint_6_p=p[-.453636168453, -.195494615763, .009568112241, -2.466281977234, 1.945743292691, -.000238214954]
+  global Waypoint_6_q=[0.12312507629394531, -0.9864345353892823, 1.4041484037982386, 3.773153467769287, -1.514808479939596, 3.040870428085327]
   while (True):
     $ 2 "Robot Program"
     $ 3 "MoveJ"
-    $ 4 "Waypoint_1" "breakAfter"
-    movej(get_inverse_kin(Waypoint_1_p, qnear=Waypoint_1_q), a=1.3962634015954636, v=1.0471975511965976)
-    $ 5 "MoveJ"
-    $ 6 "MoveJ"
-    $ 7 "Waypoint_3" "breakAfter"
+    $ 4 "Waypoint_3" "breakAfter"
     movej(get_inverse_kin(Waypoint_3_p, qnear=Waypoint_3_q), a=1.3962634015954636, v=1.0471975511965976)
-    $ 8 "MoveL"
-    $ 9 "Waypoint_8" "breakAfter"
-    movel(Waypoint_8_p, a=1.2, v=0.25)
+    $ 5 "MoveJ"
+    $ 6 "Waypoint_1" "breakAfter"
+    movej(get_inverse_kin(Waypoint_1_p, qnear=Waypoint_1_q), a=1.3962634015954636, v=1.0471975511965976)
+    $ 7 "MoveL"
+    $ 8 "Waypoint_2" "breakAfter"
+    movel(Waypoint_2_p, a=1.2, v=0.25)
     # begin: URCap Program Node
     #   Source: OnRobot, 6.0.2, OnRobot A/S
     #   Type: RG Grip
-    $ 10 "RG Grip"
-on_return = rg_grip(30.0, 40.0, tool_index = 0, blocking = True, depth_comp = False, popupmsg = True)
-rg_payload_set(mass = 0.2, tool_index = 0, use_guard = True)
+    $ 9 "RG Grip"
+on_return = rg_grip(32.2, 40.0, tool_index = 0, blocking = True, depth_comp = False, popupmsg = True)
+rg_payload_set(mass = 0.1, tool_index = 0, use_guard = True)
     # end: URCap Program Node
-    $ 11 "MoveL"
-    $ 12 "Waypoint_4" "breakAfter"
-    movel(Waypoint_4_p, a=1.2, v=0.25)
-    $ 13 "MoveJ"
-    $ 14 "Waypoint_7" "breakAfter"
-    movej(get_inverse_kin(Waypoint_7_p, qnear=Waypoint_7_q), a=1.3962634015954636, v=1.0471975511965976)
-    $ 15 "MoveJ"
-    $ 16 "Waypoint_5" "breakAfter"
-    movej(get_inverse_kin(Waypoint_5_p, qnear=Waypoint_5_q), a=1.3962634015954636, v=1.0471975511965976)
-    $ 17 "MoveL"
-    $ 18 "Waypoint_6" "breakAfter"
+    $ 10 "MoveL"
+    $ 11 "Waypoint_4" "breakAfter"
+    movel(Waypoint_4_p, a=1.2, v=0.25, r=0.1)
+    $ 12 "MoveJ"
+    $ 13 "Waypoint_5" "breakAfter"
+    movej(get_inverse_kin(Waypoint_5_p, qnear=Waypoint_5_q), a=1.3962634015954636, v=1.0471975511965976, r=0.1)
+    $ 14 "MoveL"
+    $ 15 "Waypoint_6" "breakAfter"
     movel(Waypoint_6_p, a=1.2, v=0.25)
     # begin: URCap Program Node
     #   Source: OnRobot, 6.0.2, OnRobot A/S
     #   Type: RG Grip
-    $ 19 "RG Grip"
-on_return = rg_grip(50.0, 40.0, tool_index = 0, blocking = True, depth_comp = False, popupmsg = True)
+    $ 16 "RG Grip"
+on_return = rg_grip(94.5, 40.0, tool_index = 0, blocking = True, depth_comp = False, popupmsg = True)
 rg_payload_set(mass = 0.0, tool_index = 0, use_guard = True)
     # end: URCap Program Node
-    $ 20 "MoveL"
-    $ 21 "Waypoint_9" "breakAfter"
-    movel(Waypoint_9_p, a=1.2, v=0.25)
-    $ 22 "MoveJ"
-    $ 23 "Waypoint_2" "breakAfter"
-    movej(get_inverse_kin(Waypoint_2_p, qnear=Waypoint_2_q), a=1.3962634015954636, v=1.0471975511965976)
   end
 end

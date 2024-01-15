@@ -160,7 +160,15 @@
     <Resource Include="SQLCommands.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="scripts\Script1.txt" />
+    <Resource Include="scripts\Script1.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="scripts\marie.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="scripts\newtry.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

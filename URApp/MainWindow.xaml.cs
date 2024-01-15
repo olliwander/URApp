@@ -21,7 +21,7 @@ namespace URApp
         {
             InitializeComponent();
             connectionManager = new RobotConnectionManager();
-            IpTextBox.Text = "172.20.254.205"; // Robot5 IP
+            IpTextBox.Text = "172.20.254.203"; // Robot3 IP
             PortTextBox.Text = "30002"; // Port
 
             PopulateScriptComboBox();
@@ -282,7 +282,7 @@ namespace URApp
                 return;
             }
 
-            string stopScriptCommand = "stopl(10)";
+            string stopScriptCommand = "halt \n";
             bool isStopCommandSent = connectionManager.SendCommand(stopScriptCommand);
 
             if (isStopCommandSent)
