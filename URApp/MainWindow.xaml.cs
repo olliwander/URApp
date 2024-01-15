@@ -237,25 +237,27 @@ namespace URApp
                 return;
             }
 
-            string selectedScriptFilePath = ScriptComboBox.SelectedItem as string;
+            string selectedScriptFileName = ScriptComboBox.SelectedItem as string;
 
-            if (selectedScriptFilePath != null)
+            if (selectedScriptFileName != null)
             {
                 try
                 {
-                    // Read the content of the selected script file
+                    string scriptDirectory = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\scripts");
+
+                    string selectedScriptFilePath = Path.Combine(scriptDirectory, selectedScriptFileName + ".txt");
+
                     string scriptContent = File.ReadAllText(selectedScriptFilePath);
 
-                    // Send the script content as a command to the robot
                     bool isScriptCommandSent = connectionManager.SendCommand(scriptContent);
 
                     if (isScriptCommandSent)
                     {
-                        MessageBox.Show($"Script '{Path.GetFileName(selectedScriptFilePath)}' started successfully.");
+                        MessageBox.Show($"Script '{selectedScriptFileName}' started successfully.");
                     }
                     else
                     {
-                        MessageBox.Show($"Failed to start script '{Path.GetFileName(selectedScriptFilePath)}'.");
+                        MessageBox.Show($"Failed to start script '{selectedScriptFileName}'.");
                     }
                 }
                 catch (Exception ex)
