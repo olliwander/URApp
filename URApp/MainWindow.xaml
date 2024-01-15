@@ -72,10 +72,11 @@
             <Button Content="Start program" Click="SendCommandButton_Click" Margin="5,5"/>
         </StackPanel>
         <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" Grid.ColumnSpan="2">
+            <Label Grid.Column="1" Content="Choose program:" HorizontalAlignment="Left" Height="26" Margin="0,309,0,0" Grid.Row="1" VerticalAlignment="Top" Width="100"/>
             <ComboBox x:Name="ScriptComboBox" Margin="5" Height="25">
             </ComboBox>
-            <Button Content="Start Program" Click="StartProgramButton_Click" Margin="5"/>
-            <Button Content="Stop" Click="StopButton_Click" Margin="5"/>
+            <Button Content="Start Program" Click="StartProgramButton_Click" Margin="5" Background="Green"/>
+            <Button Content="Stop" Click="StopButton_Click" Margin="5" Background="DarkRed"/>
         </StackPanel>
 
 
