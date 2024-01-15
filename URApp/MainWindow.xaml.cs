@@ -251,6 +251,9 @@ namespace URApp
 
                     bool isScriptCommandSent = connectionManager.SendCommand(scriptContent);
 
+                    Console.Write (scriptContent);
+                    Console.Read();
+
                     if (isScriptCommandSent)
                     {
                         MessageBox.Show($"Script '{selectedScriptFileName}' started successfully.");
