@@ -21,8 +21,19 @@ namespace URApp
             {
                 MessageBox.Show("Login successful!");
 
-                MainWindow mainWindow = new MainWindow();
-                mainWindow.Show();
+                if (username.Equals("admin", StringComparison.OrdinalIgnoreCase))
+                {
+                    MainWindow mainWindow = new MainWindow();
+                    UserOverview userOverview = new UserOverview(); // Assuming you have a UserOverview window
+
+                    mainWindow.Show();
+                    userOverview.Show();
+                }
+                else
+                {
+                    MainWindow mainWindow = new MainWindow();
+                    mainWindow.Show();
+                }
 
                 this.Close();
             }

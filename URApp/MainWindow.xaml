@@ -3,24 +3,16 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="500" Width="1000">
     <Grid>
-        <!-- Define the columns for the layout -->
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="500*"/>
-            <!-- Input options column -->
-            <ColumnDefinition Width="141*"/>
-            <ColumnDefinition Width="359*"/>
-            <!-- Output options column -->
+            <ColumnDefinition Width="350*"/>
+            <ColumnDefinition Width="150*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Define the rows for the layout -->
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- For connection controls -->
             <RowDefinition Height="*"/>
-            <!-- For main content -->
         </Grid.RowDefinitions>
 
-        <!-- Connection controls -->
         <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
             <Label Content="IP Adresse:"/>
             <TextBox x:Name="IpTextBox" Width="120" Margin="5,0"/>
@@ -29,8 +21,6 @@
             <Button Content="Connect" Click="ConnectButton_Click" Margin="5,0" IsDefault="True"/>
             <Ellipse x:Name="StatusLight" Fill="Red" Width="20" Height="20" VerticalAlignment="Center" Margin="5,0"/>
         </StackPanel>
-
-        <!-- Input options on the left side -->
 
         <StackPanel Grid.Column="0" Grid.Row="1" VerticalAlignment="Top">
             <Label Content="Base:"/>
@@ -50,9 +40,8 @@
         </StackPanel>
 
 
-        <!-- Output options on the right side -->
+        <!-- Højre side -->
         <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Grid.ColumnSpan="2">
-            <!-- 3x3 Grid for Waypoint Buttons -->
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -65,8 +54,6 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <!-- Waypoint Buttons -->
-                <!-- Repeat this structure for waypoints 1 through 9, adjusting the Grid.Row and Grid.Column -->
                 <Button Content="Waypoint 1" Grid.Row="0" Grid.Column="0" Margin="5" Click="WaypointButton1_Click"/>
                 <Button Content="Waypoint 2" Grid.Row="0" Grid.Column="1" Margin="5" Click="WaypointButton2_Click"/>
                 <Button Content="Waypoint 3" Grid.Row="0" Grid.Column="2" Margin="5" Click="WaypointButton3_Click"/>
@@ -78,9 +65,7 @@
                 <Button Content="Waypoint 9" Grid.Row="2" Grid.Column="2" Margin="5" Click="WaypointButton9_Click"/>
             </Grid>
 
-            <!-- Waypoint List and Removal Options -->
             <ListBox x:Name="WaypointListBox" Margin="5" Height="100" SelectionChanged="WaypointListBox_SelectionChanged">
-                <!-- ting kommer her -->
             </ListBox>
 
             <Button Content="Remove Selected Waypoint" Click="RemoveWaypointButton_Click" Margin="5"/>
