@@ -16,6 +16,13 @@ namespace URApp
         private List<string> waypoints = new List<string>();
         private Dictionary<string, string[]> waypointCache = new Dictionary<string, string[]>();
 
+        private string loggedInUser;
+        public MainWindow(string username)
+        {
+            InitializeComponent();
+            loggedInUser = username;
+            UsernameTextBlock.Text = $"Logged in as: {loggedInUser}";
+        }
 
         public MainWindow()
         {
@@ -96,11 +103,6 @@ namespace URApp
         private void UpdateStatusLight(Color color)
         {
             StatusLight.Fill = new SolidColorBrush(color);
-        }
-        protected override async void OnClosed(EventArgs e)
-        {
-            await connectionManager.DisconnectAsync();
-            base.OnClosed(e);
         }
 
         private void SaveWaypointData_Click(object sender, RoutedEventArgs e)
@@ -294,5 +296,14 @@ namespace URApp
                 MessageBox.Show("Failed to stop the script.");
             }
         }
+
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            Login login = new Login();
+            login.Show();
+
+            this.Close();
+        }
+
     }
 }

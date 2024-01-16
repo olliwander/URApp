@@ -32,14 +32,14 @@ namespace URApp
                 if (username.Equals("admin", StringComparison.OrdinalIgnoreCase))
                 {
                     // Open Admin specific windows
-                    MainWindow mainWindow = new MainWindow();
+                    MainWindow mainWindow = new MainWindow(username);
                     UserOverview userOverview = new UserOverview();
                     mainWindow.Show();
                     userOverview.Show();
                 }
                 else
                 {
-                    MainWindow mainWindow = new MainWindow();
+                    MainWindow mainWindow = new MainWindow(username);
                     mainWindow.Show();
                 }
 

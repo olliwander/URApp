@@ -4,16 +4,17 @@
         Title="MainWindow" Height="500" Width="1000">
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="350*"/>
-            <ColumnDefinition Width="150*"/>
+            <ColumnDefinition Width="300*"/>
+            <ColumnDefinition Width="200*"/>
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+        <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center">
             <Label Content="IP Adresse:"/>
             <TextBox x:Name="IpTextBox" Width="120" Margin="5,0"/>
             <Label Content="Port:"/>
@@ -38,10 +39,16 @@
             <Button x:Name="SaveWaypointButton" Content="Save Waypoint Data" Click="SaveWaypointData_Click" Margin="5"/>
             <Button Content="Disconnect" Click="DisconnectButton_Click" Margin="5,5"/>
         </StackPanel>
+        <StatusBar Grid.Column="0" Grid.Row="2" VerticalAlignment="Bottom">
+            <StatusBarItem HorizontalContentAlignment="Stretch">
+                <TextBlock x:Name="UsernameTextBlock" Text="" HorizontalAlignment="Left"/>
+            </StatusBarItem>
+            <StatusBarItem HorizontalContentAlignment="Right">
+                <Button Content="Logout" Click="LogoutButton_Click"/>
+            </StatusBarItem>
+        </StatusBar>
 
-
-        <!-- Højre side -->
-        <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Top" Grid.ColumnSpan="2">
+        <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Top">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -65,21 +72,17 @@
                 <Button Content="Waypoint 9" Grid.Row="2" Grid.Column="2" Margin="5" Click="WaypointButton9_Click"/>
             </Grid>
 
-            <ListBox x:Name="WaypointListBox" Margin="5" Height="100" SelectionChanged="WaypointListBox_SelectionChanged">
-            </ListBox>
-
+            <ListBox x:Name="WaypointListBox" Margin="5" Height="100" SelectionChanged="WaypointListBox_SelectionChanged"/>
             <Button Content="Remove Selected Waypoint" Click="RemoveWaypointButton_Click" Margin="5"/>
             <Button Content="Start program" Click="SendCommandButton_Click" Margin="5,5"/>
         </StackPanel>
-        <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom" Grid.ColumnSpan="2">
+
+        <StackPanel Grid.Column="1" Grid.Row="1" VerticalAlignment="Bottom">
             <Label Grid.Column="1" Content="Choose program:" HorizontalAlignment="Left" Height="26" Margin="0,309,0,0" Grid.Row="1" VerticalAlignment="Top" Width="100"/>
             <ComboBox x:Name="ScriptComboBox" Margin="5" Height="25">
             </ComboBox>
             <Button Content="Start Program" Click="StartProgramButton_Click" Margin="5" Background="Green"/>
             <Button Content="Stop" Click="StopButton_Click" Margin="5" Background="DarkRed"/>
         </StackPanel>
-
-
-
     </Grid>
 </Window>
