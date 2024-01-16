@@ -22,10 +22,7 @@ namespace URApp
             InitializeComponent();
             loggedInUser = username;
             UsernameTextBlock.Text = $"Logged in as: {loggedInUser}";
-        }
 
-        public MainWindow()
-        {
             InitializeComponent();
             connectionManager = new RobotConnectionManager();
             IpTextBox.Text = "172.20.254.203"; // Robot3 IP
